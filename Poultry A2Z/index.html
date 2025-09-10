@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poultry A2Z - Complete Poultry Solutions</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img src="Poultry_Logo.png" alt="Poultry A2Z Logo" class="logo-img" onerror="this.style.display='none'">
+                <h1 id="siteTitle">Poultry A2Z</h1>
+            </div>
+            <div class="header-right">
+                <div class="today-rate">
+                    <span class="rate-label">Today's Rate</span>
+                    <span class="rate-value" id="currentRate">₹45/kg</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="section-header">
+                <h2>All Listed Categories</h2>
+                <button class="show-all-btn">Show <i class="fas fa-chevron-down"></i></button>
+            </div>
+
+            <!-- Search and Filter will be added here -->
+            <div id="searchFilterContainer"></div>
+
+            <!-- Categories will be dynamically loaded here -->
+            <div class="categories-grid" id="categoriesContainer">
+                <div style="text-align: center; padding: 50px;">
+                    <div class="loading"></div>
+                    <p style="margin-top: 15px;">Loading categories...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal for detailed view -->
+    <div id="categoryModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modalBody">
+                <!-- Dynamic content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let siteData = null;
+        let modal, modalBody, closeBtn;
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('DOM loaded, starting initialization...');
+            
+            // Get modal elements
+            modal = document.getElementById('categoryModal');
+            modalBody = document.getElementById('modalBody');
+            closeBtn = document.querySelector('.close');
+            
+            console.log('Modal elements:', { modal: !!modal, modalBody: !!modalBody, closeBtn: !!closeBtn });
+            
+            try {
+                // Load data from JSON
+                console.log('Fetching data.json...');
+                const response = await fetch('./data.json');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                siteData = await response.json();
+                console.log('Data loaded successfully:', siteData);
+                
+                // Update site title
+                if (siteData.siteConfig) {
+                    document.getElementById('siteTitle').textContent = siteData.siteConfig.title;
+                    document.title = `${siteData.siteConfig.title} - ${siteData.siteConfig.tagline}`;
+                }
+                
+                // Render categories
+                renderCategories();
+                
+                // Add search and filter
+                addSearchAndFilter();
+                
+                // Initialize event listeners
+                initializeEventListeners();
+                
+                // Start rate updates
+                startRateUpdates();
+                
+                console.log('Initialization complete!');
+                
+            } catch (error) {
+                console.error('Error loading data:', error);
+                showError('Failed to load website data. Please refresh the page.');
+            }
+        });
+
+        // Render categories from JSON data
+        function renderCategories() {
+            const container = document.getElementById('categoriesContainer');
+            
+            if (!siteData || !siteData.categories) {
+                container.innerHTML = '<p style="text-align: center; padding: 50px;">No categories found.</p>';
+                return;
+            }
+            
+            const categories = Object.values(siteData.categories);
+            console.log(`Rendering ${categories.length} categories...`);
+            
+            const categoriesHTML = categories.map(category => `
+                <div class="category-card ${category.featured ? 'featured' : ''}" data-category="${category.id}">
+                    <div class="card-image">
+                        <img src="${category.image}" alt="${category.title}" 
+                             onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'">
+                        <div class="card-overlay">
+                            <h3>${category.title}</h3>
+                            <div class="hover-details">
+                                <p>${category.description}</p>
+                                <ul>
+                                    ${category.features.slice(0, 3).map(feature => `<li>${feature}</li>`).join('')}
+                                </ul>
+                            </div>
+                            ${category.badge ? `<div class="featured-badge">${category.badge}</div>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            container.innerHTML = categoriesHTML;
+            console.log('Categories rendered successfully');
+        }
+
+        // Add search and filter functionality
+        function addSearchAndFilter() {
+            const container = document.getElementById('searchFilterContainer');
+            
+            if (!siteData || !siteData.filterCategories) return;
+            
+            const filterButtons = Object.entries(siteData.filterCategories).map(([key, label]) => 
+                `<button class="filter-btn ${key === 'all' ? 'active' : ''}" data-filter="${key}">${label}</button>`
+            ).join('');
+            
+            container.innerHTML = `
+                <div class="search-filter-container">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Search categories...">
+                    </div>
+                    <div class="filter-buttons">
+                        ${filterButtons}
+                    </div>
+                </div>
+            `;
+            
+            // Add search functionality
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', handleSearch);
+            }
+            
+            // Add filter functionality
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', handleFilter);
+            });
+        }
+
+        // Initialize event listeners
+        function initializeEventListeners() {
+            console.log('Setting up event listeners...');
+            
+            // Category card click events
+            const categoryCards = document.querySelectorAll('.category-card');
+            console.log(`Found ${categoryCards.length} category cards`);
+            
+            categoryCards.forEach((card, index) => {
+                card.addEventListener('click', function() {
+                    const categoryId = this.getAttribute('data-category');
+                    console.log(`Card ${index + 1} clicked: ${categoryId}`);
+                    openModal(categoryId);
+                });
+            });
+
+            // Modal close events
+            if (closeBtn) {
+                closeBtn.addEventListener('click', closeModal);
+            }
+            
+            if (modal) {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        closeModal();
+                    }
+                });
+            }
+
+            // Escape key to close modal
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeModal();
+                }
+            });
+
+            // Show all button
+            const showAllBtn = document.querySelector('.show-all-btn');
+            if (showAllBtn) {
+                showAllBtn.addEventListener('click', toggleShowAll);
+            }
+            
+            console.log('Event listeners set up successfully');
+        }
+
+        // Open modal with category details
+        function openModal(categoryId) {
+            console.log('Opening modal for category:', categoryId);
+            
+            if (!siteData || !siteData.categories) {
+                console.error('Site data not available');
+                return;
+            }
+            
+            const category = siteData.categories[categoryId];
+            if (!category) {
+                console.error('Category not found:', categoryId);
+                alert('Category data not found: ' + categoryId);
+                return;
+            }
+            
+            console.log('Category data found:', category);
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Build modal content
+            const featuresHTML = category.features.map(feature => `
+                <div class="feature-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>${feature}</span>
+                </div>
+            `).join('');
+            
+            const productsHTML = category.products.map(product => `
+                <div class="product-card">
+                    <img src="${product.image}" alt="${product.name}" 
+                         onerror="this.src='https://via.placeholder.com/400x300?text=Product+Image'">
+                    <div class="product-info">
+                        <h4>${product.name}</h4>
+                        <p class="product-price">${product.price}</p>
+                        ${product.description ? `<p class="product-description">${product.description}</p>` : ''}
+                        ${product.inStock !== undefined ? `
+                            <div class="product-status">
+                                <span class="stock-status ${product.inStock ? 'in-stock' : 'out-of-stock'}">
+                                    ${product.inStock ? 'In Stock' : 'Out of Stock'}
+                                </span>
+                            </div>
+                        ` : ''}
+                        <button class="inquiry-btn" onclick="openInquiry('${product.name}', '${category.contact.whatsapp || category.contact.phone}', '${category.contact.email}')" ${!product.inStock ? 'disabled' : ''}>
+                            <i class="fas fa-envelope"></i> 
+                            ${product.inStock !== false ? 'Inquire Now' : 'Notify When Available'}
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            
+            modalBody.innerHTML = `
+                <div class="modal-header">
+                    <h2>${category.title}</h2>
+                    <p class="modal-description">${category.fullDescription}</p>
+                </div>
+                
+                <div class="modal-features">
+                    <h3>Key Features</h3>
+                    <div class="features-grid">${featuresHTML}</div>
+                </div>
+                
+                <div class="modal-products">
+                    <h3>Available Products/Services</h3>
+                    <div class="products-grid">${productsHTML}</div>
+                </div>
+                
+                <div class="modal-contact">
+                    <h3>Contact Information</h3>
+                    <div class="contact-info">
+                        <div class="contact-item" onclick="callPhone('${category.contact.phone}')">
+                            <i class="fas fa-phone"></i>
+                            <span>${category.contact.phone}</span>
+                            <small>Click to call</small>
+                        </div>
+                        <div class="contact-item" onclick="sendEmail('${category.contact.email}')">
+                            <i class="fas fa-envelope"></i>
+                            <span>${category.contact.email}</span>
+                            <small>Click to email</small>
+                        </div>
+                        ${category.contact.whatsapp ? `
+                            <div class="contact-item" onclick="openWhatsApp('${category.contact.whatsapp}', 'General inquiry about ${category.title}')">
+                                <i class="fab fa-whatsapp"></i>
+                                <span>WhatsApp</span>
+                                <small>Click to message</small>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+            
+            // Show modal
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            
+            console.log('Modal opened successfully');
+        }
+
+        // Close modal
+        function closeModal() {
+            console.log('Closing modal');
+            if (modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // Inquiry functions
+        function openInquiry(productName, phone, email) {
+            const message = `Hi! I'm interested in ${productName}. Can you provide more details?`;
+            const options = [
+                `WhatsApp: https://wa.me/${phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`,
+                `Call: ${phone}`,
+                `Email: ${email}`
+            ];
+            
+            const choice = confirm(`Inquiry for: ${productName}\n\nChoose contact method:\n- OK for WhatsApp\n- Cancel to see other options`);
+            
+            if (choice) {
+                openWhatsApp(phone, productName);
+            } else {
+                alert(`Contact options:\n\nPhone: ${phone}\nEmail: ${email}\nWhatsApp: ${phone}`);
+            }
+        }
+
+        function openWhatsApp(phone, productName) {
+            const message = `Hi! I'm interested in ${productName}. Can you provide more details?`;
+            const cleanPhone = phone.replace(/[^0-9]/g, '');
+            const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        function callPhone(phone) {
+            window.location.href = `tel:${phone}`;
+        }
+
+        function sendEmail(email) {
+            window.location.href = `mailto:${email}`;
+        }
+
+        // Search functionality
+        function handleSearch(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.category-card');
+            
+            cards.forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const description = card.querySelector('.hover-details p').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Filter functionality
+        function handleFilter(e) {
+            const filterValue = e.target.getAttribute('data-filter');
+            const cards = document.querySelectorAll('.category-card');
+            
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            e.target.classList.add('active');
+            
+            // Filter categories
+            cards.forEach(card => {
+                const categoryId = card.getAttribute('data-category');
+                const categoryData = siteData.categories[categoryId];
+                
+                if (filterValue === 'all') {
+                    card.style.display = 'block';
+                } else if (categoryData && categoryData.category === filterValue) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Toggle show all
+        function toggleShowAll() {
+            const icon = document.querySelector('.show-all-btn i');
+            const isExpanded = icon.classList.contains('fa-chevron-up');
+            const allCards = document.querySelectorAll('.category-card');
+            
+            if (isExpanded) {
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+                document.querySelector('.show-all-btn').innerHTML = 'Show All <i class="fas fa-chevron-down"></i>';
+                
+                allCards.forEach((card, index) => {
+                    if (index >= 6) {
+                        card.style.display = 'none';
+                    }
+                });
+            } else {
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+                document.querySelector('.show-all-btn').innerHTML = 'Show Less <i class="fas fa-chevron-up"></i>';
+                
+                allCards.forEach(card => {
+                    card.style.display = 'block';
+                });
+            }
+        }
+
+        // Rate updates
+        function startRateUpdates() {
+            if (!siteData || !siteData.siteConfig) return;
+            
+            const rateElement = document.getElementById('currentRate');
+            const config = siteData.siteConfig.todayRate;
+            let currentRate = config.basePrice;
+            
+            setInterval(() => {
+                const change = (Math.random() - 0.5) * config.fluctuationRange;
+                const minRate = config.basePrice - (config.fluctuationRange / 2);
+                const maxRate = config.basePrice + (config.fluctuationRange / 2);
+                currentRate = Math.max(minRate, Math.min(maxRate, currentRate + change));
+                
+                const newRate = `${config.currency}${Math.round(currentRate)}${config.unit}`;
+                const trend = change > 0 ? '↗' : change < 0 ? '↘' : '→';
+                const trendColor = change > 0 ? '#4CAF50' : change < 0 ? '#f44336' : '#FFC107';
+                
+                rateElement.innerHTML = `${newRate} <span style="color: ${trendColor}; font-size: 12px;">${trend}</span>`;
+            }, 8000);
+        }
+
+        // Show error
+        function showError(message) {
+            document.getElementById('categoriesContainer').innerHTML = `
+                <div style="text-align: center; padding: 50px; color: #f44336;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 20px;"></i>
+                    <h3>Error</h3>
+                    <p>${message}</p>
+                    <button onclick="location.reload()" style="margin-top: 15px; padding: 10px 20px; background: #4a7c59; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        Reload Page
+                    </button>
+                </div>
+            `;
+        }
+
+        console.log('Script loaded successfully');
+    </script>
+
+    <style>
+        .loading {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4a7c59;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .product-description {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .product-status {
+            margin-bottom: 10px;
+        }
+        
+        .stock-status {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+        }
+        
+        .stock-status.in-stock {
+            background: #e8f5e8;
+            color: #4CAF50;
+        }
+        
+        .stock-status.out-of-stock {
+            background: #ffebee;
+            color: #f44336;
+        }
+        
+        .inquiry-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .inquiry-btn:disabled:hover {
+            background: #ccc;
+        }
+    </style>
+</body>
+</html>
