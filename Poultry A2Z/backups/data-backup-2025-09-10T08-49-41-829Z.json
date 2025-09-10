@@ -1,0 +1,304 @@
+{
+  "siteConfig": {
+    "title": "Poultry A2Z",
+    "tagline": "Complete Poultry Solutions",
+    "todayRate": {
+      "basePrice": 45,
+      "currency": "₹",
+      "unit": "/kg",
+      "fluctuationRange": 4
+    }
+  },
+  "categories": {
+    "acid-chemicals": {
+      "id": "acid-chemicals",
+      "title": "ACID, CHEMICALS & DISINFECTANT",
+      "description": "Essential cleaning and sanitization products for poultry farms",
+      "fullDescription": "Comprehensive range of cleaning acids, disinfectants, and sanitization products designed specifically for poultry farming operations. Our products ensure optimal hygiene standards and disease prevention.",
+      "category": "products",
+      "featured": false,
+      "image": "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=300&h=200&fit=crop",
+      "products": [
+        {
+          "id": "pd-001",
+          "name": "Poultry Disinfectant Plus",
+          "price": "₹450/L",
+          "image": "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=400&h=300&fit=crop",
+          "description": "Advanced disinfectant for poultry farms",
+          "inStock": true
+        },
+        {
+          "id": "pd-002",
+          "name": "Farm Sanitizer Pro",
+          "price": "₹320/L",
+          "image": "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=400&h=300&fit=crop",
+          "description": "Professional grade sanitizer",
+          "inStock": true
+        },
+        {
+          "id": "pd-003",
+          "name": "Water Treatment Chemical",
+          "price": "₹280/kg",
+          "image": "https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=400&h=300&fit=crop",
+          "description": "Water purification chemicals",
+          "inStock": false
+        }
+      ],
+      "features": [
+        "EPA Approved",
+        "Non-toxic formula",
+        "Quick action",
+        "Long-lasting protection"
+      ],
+      "contact": {
+        "phone": "+91-9876543210",
+        "email": "chemicals@poultrya2z.com",
+        "whatsapp": "+919876543210"
+      }
+    },
+    "api-drugs": {
+      "id": "api-drugs",
+      "title": "API & PURE DRUGS",
+      "description": "High-quality pharmaceutical products for poultry health",
+      "fullDescription": "Premium Active Pharmaceutical Ingredients and veterinary medicines formulated for optimal poultry health management and disease treatment.",
+      "category": "products",
+      "featured": false,
+      "image": "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=300&h=200&fit=crop",
+      "products": [
+        {
+          "id": "api-001",
+          "name": "Vitamin Complex API",
+          "price": "₹850/kg",
+          "image": "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=300&fit=crop",
+          "description": "Essential vitamin complex for poultry",
+          "inStock": true
+        },
+        {
+          "id": "api-002",
+          "name": "Antibiotic Formula",
+          "price": "₹1200/kg",
+          "image": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=300&fit=crop",
+          "description": "Veterinary antibiotic formula",
+          "inStock": true
+        },
+        {
+          "id": "api-003",
+          "name": "Growth Promoter",
+          "price": "₹650/kg",
+          "image": "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=400&h=300&fit=crop",
+          "description": "Natural growth enhancement",
+          "inStock": true
+        }
+      ],
+      "features": [
+        "GMP Certified",
+        "High purity",
+        "Veterinary approved",
+        "Batch tested"
+      ],
+      "contact": {
+        "phone": "+91-9876543211",
+        "email": "drugs@poultrya2z.com",
+        "whatsapp": "+919876543211"
+      }
+    },
+    "certification": {
+      "id": "certification",
+      "title": "CERTIFICATION",
+      "description": "Professional certification and compliance services",
+      "fullDescription": "Complete certification services for poultry farms including quality assurance, compliance documentation, and industry standard certifications.",
+      "category": "services",
+      "featured": false,
+      "image": "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=300&h=200&fit=crop",
+      "products": [
+        {
+          "id": "cert-001",
+          "name": "ISO Certification",
+          "price": "₹25000",
+          "image": "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=400&h=300&fit=crop",
+          "description": "International quality standards certification",
+          "inStock": true
+        },
+        {
+          "id": "cert-002",
+          "name": "HACCP Certification",
+          "price": "₹18000",
+          "image": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=300&fit=crop",
+          "description": "Food safety management certification",
+          "inStock": true
+        },
+        {
+          "id": "cert-003",
+          "name": "Organic Certification",
+          "price": "₹15000",
+          "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop",
+          "description": "Organic farming certification",
+          "inStock": true
+        }
+      ],
+      "features": [
+        "International standards",
+        "Expert consultation",
+        "Fast processing",
+        "Ongoing support"
+      ],
+      "contact": {
+        "phone": "+91-9876543212",
+        "email": "certification@poultrya2z.com",
+        "whatsapp": "+919876543212"
+      }
+    },
+    "chicken-egg": {
+      "id": "chicken-egg",
+      "title": "CHICKEN & EGG SHOP",
+      "description": "Fresh chicken and eggs direct from farm",
+      "fullDescription": "Farm-fresh chicken and eggs delivered daily. We maintain the highest quality standards and ensure freshness from farm to your table.",
+      "category": "products",
+      "featured": true,
+      "badge": "Fresh EPP/Daily",
+      "image": "https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?w=300&h=200&fit=crop",
+      "products": [
+        {
+          "id": "ce-001",
+          "name": "Fresh Broiler Chicken",
+          "price": "₹180/kg",
+          "image": "https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?w=400&h=300&fit=crop",
+          "description": "Farm fresh broiler chicken",
+          "inStock": true
+        },
+        {
+          "id": "ce-002",
+          "name": "Farm Fresh Eggs (30 pcs)",
+          "price": "₹150/tray",
+          "image": "https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?w=400&h=300&fit=crop",
+          "description": "Fresh eggs from free-range chickens",
+          "inStock": true
+        },
+        {
+          "id": "ce-003",
+          "name": "Organic Free Range Chicken",
+          "price": "₹250/kg",
+          "image": "https://images.unsplash.com/photo-1594221708779-94832f4320d1?w=400&h=300&fit=crop",
+          "description": "Premium organic chicken",
+          "inStock": true
+        }
+      ],
+      "features": [
+        "Daily fresh supply",
+        "Farm to table",
+        "Quality assured",
+        "Home delivery"
+      ],
+      "contact": {
+        "phone": "+91-9876543213",
+        "email": "shop@poultrya2z.com",
+        "whatsapp": "+919876543213"
+      }
+    },
+    "chicks-supplier": {
+      "id": "chicks-supplier",
+      "title": "CHICKS SUPPLIER",
+      "description": "Quality day-old chicks from certified hatcheries",
+      "fullDescription": "Premium quality day-old chicks from certified hatcheries with high survival rates and excellent genetic potential for optimal growth.",
+      "category": "supplies",
+      "featured": false,
+      "image": "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=300&h=200&fit=crop",
+      "products": [
+        {
+          "id": "cs-001",
+          "name": "Broiler Day-Old Chicks",
+          "price": "₹25/chick",
+          "image": "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=400&h=300&fit=crop",
+          "description": "High-quality broiler chicks",
+          "inStock": true
+        },
+        {
+          "id": "cs-002",
+          "name": "Layer Day-Old Chicks",
+          "price": "₹35/chick",
+          "image": "https://images.unsplash.com/photo-1563281577-a7be47e20db9?w=400&h=300&fit=crop",
+          "description": "Premium layer breed chicks",
+          "inStock": true
+        },
+        {
+          "id": "cs-003",
+          "name": "Desi Breed Chicks",
+          "price": "₹40/chick",
+          "image": "https://images.unsplash.com/photo-1551218808-94e220e084d2?w=400&h=300&fit=crop",
+          "description": "Traditional desi breed chicks",
+          "inStock": false
+        }
+      ],
+      "features": [
+        "Certified hatcheries",
+        "High survival rate",
+        "Vaccinated",
+        "Genetic quality"
+      ],
+      "contact": {
+        "phone": "+91-9876543214",
+        "email": "chicks@poultrya2z.com",
+        "whatsapp": "+919876543214"
+      }
+    },
+    "cold-storage": {
+      "id": "cold-storage",
+      "title": "COLD STORAGE",
+      "description": "Temperature-controlled storage solutions",
+      "fullDescription": "State-of-the-art cold storage facilities with precise temperature control for preserving poultry products and maintaining quality.",
+      "category": "services",
+      "featured": false,
+      "image": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop",
+      "products": [
+        {
+          "id": "cs-001",
+          "name": "Frozen Storage (per month)",
+          "price": "₹15/kg",
+          "image": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop",
+          "description": "Long-term frozen storage",
+          "inStock": true
+        },
+        {
+          "id": "cs-002",
+          "name": "Chilled Storage (per month)",
+          "price": "₹10/kg",
+          "image": "https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?w=400&h=300&fit=crop",
+          "description": "Short-term chilled storage",
+          "inStock": true
+        },
+        {
+          "id": "cs-003",
+          "name": "Blast Freezing Service",
+          "price": "₹5/kg",
+          "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop",
+          "description": "Rapid freezing service",
+          "inStock": true
+        }
+      ],
+      "features": [
+        "24/7 monitoring",
+        "Backup power",
+        "Quality preservation",
+        "Flexible capacity"
+      ],
+      "contact": {
+        "phone": "+91-9876543215",
+        "email": "storage@poultrya2z.com",
+        "whatsapp": "+919876543215"
+      }
+    }
+  },
+  "filterCategories": {
+    "all": "All Categories",
+    "supplies": "Supplies",
+    "services": "Services",
+    "products": "Products"
+  },
+  "notifications": {
+    "addedToFavorites": "Added to favorites",
+    "removedFromFavorites": "Removed from favorites",
+    "inquirySent": "Inquiry sent successfully",
+    "showingCategories": "Showing {count} categories",
+    "noResults": "No categories found"
+  }
+}
